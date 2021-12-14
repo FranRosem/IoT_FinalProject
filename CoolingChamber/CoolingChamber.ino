@@ -16,7 +16,7 @@ WiFiManager wifiManager;
 
 /* Broker MQTT Properties */
 PubSubClient mqttClient(wifiClient);
-const char* OUT_TOPIC = "yout_out_topic";
+const char* OUT_TOPIC = "your_out_topic";
 
 /* MCU ESP32 Properties */
 const char* CLIENT_ID = "YOUR_ID"; // unique client id
@@ -106,6 +106,7 @@ boolean mqttClientConnect() {
   if (mqttClient.connect(CLIENT_ID)) {
     Serial.println("Connected to " + String(MQTT_BROKER));
     subscribeToTopic(OUT_SHADOW);
+	subscribeToTopic(OUT_TOPIC);
   }
   else {
     Serial.println("Couldn't connect to MQTT broker.");

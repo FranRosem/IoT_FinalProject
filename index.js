@@ -20,12 +20,17 @@ var params = {
     thingName: 'your_thing',
 }
 
+var roomsList = {
+    'oksem':'MyProjectThing',
+    'basti':'MyThing'
+}
+
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = 'Welcome to your Cooling Chamber Project. What do you want to know?.';
+        const speakOutput = 'Welcome to your Cooling Chamber Project. How can I help?.';
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -33,6 +38,29 @@ const LaunchRequestHandler = {
     }
     
 };
+
+const NameIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'NameIntent';
+    },
+    handle(handlerInput) {
+        let speechTextName = "";
+        let name = handlerInput.requestEnvelope.request.intent.slots.name.value;
+        if (roomsList[name] != undefined) {
+            TurnOnParams.topic= 'ucb/iot/servomotor/' + name;
+            TurnOffParams.topic= 'ucb/iot/servomotor/' + name;
+            params.thingName = roomsList[name];
+            speechTextName = 'Welcome ' + name + '!';
+        }
+        else {
+            speechTextName = "Sorry " + name + ", I don't know who you are, please add yourself to your own list of rooms.";
+        }
+        return handlerInput.responseBuilder
+            .speak(speechTextName)
+            .reprompt()
+            .getResponse();
+   
 
 const TemperatureIntentHandler = {
     canHandle(handlerInput) {
